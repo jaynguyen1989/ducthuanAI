@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Thuận AI Search</title>
+  <style>
+    :root{--bg:#f7f7f8;--panel:#fff;--text:#202123;--muted:#6b7280;--line:#e5e7eb;--accent:#111827;--soft:#f1f5f9}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+    .app{min-height:100vh;display:grid;grid-template-columns:260px 1fr}.side{background:#111827;color:white;padding:18px;display:flex;flex-direction:column;gap:14px}
+    .brand{font-size:20px;font-weight:800}.sub{font-size:12px;color:#cbd5e1;line-height:1.5}.new{border:1px solid #475569;background:transparent;color:white;padding:11px;border-radius:10px;cursor:pointer;text-align:left}
+    .tip{margin-top:auto;font-size:12px;color:#94a3b8;line-height:1.55}.main{display:flex;flex-direction:column;min-width:0}.top{height:62px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:2}
+    .top b{font-size:15px}.status{font-size:12px;color:var(--muted)}.chat{width:min(850px,100%);margin:0 auto;padding:34px 20px 170px}.welcome{text-align:center;padding:80px 10px 35px}.welcome h1{font-size:34px;margin:0 0 10px}.welcome p{color:var(--muted);margin:0}
+    .msg{display:flex;gap:13px;margin:25px 0}.avatar{width:32px;height:32px;border-radius:9px;background:#111827;color:#fff;display:grid;place-items:center;flex:0 0 auto;font-size:13px;font-weight:700}.msg.user .avatar{background:#64748b}.bubble{min-width:0;line-height:1.7;font-size:15px;white-space:pre-wrap}.msg.user .bubble{background:var(--soft);padding:12px 15px;border-radius:14px}.sources{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}.sources-title{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px}.source{display:block;color:#2563eb;text-decoration:none;font-size:13px;padding:6px 0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.source:hover{text-decoration:underline}
+    .composer-wrap{position:fixed;left:260px;right:0;bottom:0;background:linear-gradient(transparent,var(--bg) 24%);padding:34px 18px 20px}.composer{width:min(850px,100%);margin:auto;background:white;border:1px solid #d1d5db;border-radius:18px;box-shadow:0 8px 30px rgba(0,0,0,.08);padding:12px}.composer textarea{width:100%;border:0;outline:0;resize:none;min-height:48px;max-height:160px;font:inherit;padding:8px;background:transparent}.bar{display:flex;align-items:center;justify-content:space-between;gap:10px}.toggle{display:flex;align-items:center;gap:8px;border:1px solid var(--line);padding:8px 10px;border-radius:999px;font-size:13px;cursor:pointer;user-select:none}.toggle.active{background:#e0f2fe;border-color:#7dd3fc;color:#075985}.send{border:0;background:var(--accent);color:white;width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:18px}.send:disabled{opacity:.45;cursor:not-allowed}.notice{text-align:center;color:var(--muted);font-size:11px;margin-top:8px}.typing{display:inline-flex;gap:5px}.typing i{width:6px;height:6px;background:#64748b;border-radius:50%;animation:b 1s infinite}.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}@keyframes b{50%{transform:translateY(-5px)}}
+    @media(max-width:720px){.app{grid-template-columns:1fr}.side{display:none}.composer-wrap{left:0}.top{padding:0 14px}.chat{padding-left:14px;padding-right:14px}.welcome{padding-top:45px}.welcome h1{font-size:28px}}
+  </style>
+
+<style>
+.app-switcher{position:fixed;top:12px;right:12px;z-index:9999;display:flex;gap:8px}
+.app-switcher a{background:#111827;color:white;text-decoration:none;padding:9px 12px;border-radius:999px;font:600 13px/1 Arial,sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.18)}
+.app-switcher a.alt{background:#2563eb}
+@media(max-width:600px){.app-switcher{top:8px;right:8px}.app-switcher a{padding:8px 10px;font-size:12px}}
+</style>
+</head>
+<body><div style="position:fixed;left:12px;bottom:12px;z-index:9999;background:#fff3cd;color:#664d03;border:1px solid #ffecb5;padding:9px 12px;border-radius:10px;font:600 12px Arial,sans-serif;max-width:280px">Bản này chỉ cần ANTHROPIC_API_KEY. Tìm kiếm Internet đang tắt.</div><div class="app-switcher"><a href="/">Trang chủ</a><a class="alt" href="/content">Xưởng Content</a></div>
+<div class="app">
+  <aside class="side">
+    <div class="brand">Thuận AI Search</div>
+    <div class="sub">Trò chuyện với Claude và tìm kiếm thông tin mới trên Internet.</div>
+    <button class="new" onclick="newChat()">＋ Cuộc trò chuyện mới</button>
+    <div class="tip">Bật “Tìm web (chưa bật)” khi hỏi tin tức, giá cả, luật, lịch thi đấu hoặc nội dung cần cập nhật.</div>
+  </aside>
+  <main class="main">
+    <header class="top"><b>Trợ lý AI</b><span class="status" id="status">Sẵn sàng</span></header>
+    <section class="chat" id="chat">
+      <div class="welcome" id="welcome"><h1>Hôm nay bạn muốn hỏi gì?</h1><p>Có thể trò chuyện bình thường hoặc bật tìm kiếm trên web.</p></div>
+    </section>
+  </main>
+</div>
+<div class="composer-wrap">
+  <div class="composer">
+    <textarea id="input" rows="1" placeholder="Nhập câu hỏi..." onkeydown="handleKey(event)"></textarea>
+    <div class="bar">
+      <div class="toggle" id="webToggle" onclick="toggleWeb()">🌐 <span>Tìm web (chưa bật)</span></div>
+      <button class="send" id="sendBtn" onclick="sendMessage()">↑</button>
+    </div>
+  </div>
+  <div class="notice">AI có thể trả lời sai. Hãy kiểm tra các thông tin quan trọng.</div>
+</div>
+<script>
+let useWeb=false, busy=false, history=[];
+const chat=document.getElementById('chat'), input=document.getElementById('input');
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function toggleWeb(){useWeb=!useWeb;document.getElementById('webToggle').classList.toggle('active',useWeb)}
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage()} setTimeout(()=>{input.style.height='auto';input.style.height=Math.min(input.scrollHeight,160)+'px'},0)}
+function addMessage(role,text,sources=[]){document.getElementById('welcome')?.remove();const el=document.createElement('div');el.className='msg '+role;let src='';if(sources.length){src='<div class="sources"><div class="sources-title">Nguồn tham khảo</div>'+sources.map((s,i)=>`<a class="source" href="${esc(s.url)}" target="_blank" rel="noopener">[${i+1}] ${esc(s.title)}</a>`).join('')+'</div>'}el.innerHTML=`<div class="avatar">${role==='user'?'Bạn':'AI'}</div><div class="bubble">${esc(text)}${src}</div>`;chat.appendChild(el);window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});return el}
+function newChat(){history=[];chat.innerHTML='<div class="welcome" id="welcome"><h1>Hôm nay bạn muốn hỏi gì?</h1><p>Có thể trò chuyện bình thường hoặc bật tìm kiếm trên web.</p></div>';input.focus()}
+async function sendMessage(){const message=input.value.trim();if(!message||busy)return;busy=true;document.getElementById('sendBtn').disabled=true;document.getElementById('status').textContent=useWeb?'Đang tìm kiếm...':'Đang trả lời...';addMessage('user',message);input.value='';input.style.height='auto';const wait=addMessage('assistant','');wait.querySelector('.bubble').innerHTML='<span class="typing"><i></i><i></i><i></i></span>';try{const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message,use_web:useWeb,history})});const data=await res.json();if(!res.ok||data.error)throw new Error(data.error||'Có lỗi xảy ra');wait.remove();addMessage('assistant',data.answer,data.sources||[]);history.push({role:'user',content:message},{role:'assistant',content:data.answer});history=history.slice(-16)}catch(e){wait.remove();addMessage('assistant','Lỗi: '+e.message)}finally{busy=false;document.getElementById('sendBtn').disabled=false;document.getElementById('status').textContent='Sẵn sàng';input.focus()}}
+</script>
+</body>
+</html>

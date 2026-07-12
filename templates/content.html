@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xưởng Content</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Special+Elite&family=Courier+Prime:wght@400;700&display=swap');
+
+  :root{
+    --paper: #F7F1E3;
+    --ink: #2A2420;
+    --ink-soft: #6B5E4F;
+    --stamp: #B23A2E;
+    --line: #D9CBA8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 1px 1px, rgba(42,36,32,0.05) 1px, transparent 0) 0 0/22px 22px,
+      var(--paper);
+    color:var(--ink);
+    font-family:'Be Vietnam Pro', sans-serif;
+    min-height:100vh;
+    padding:28px 18px 60px;
+  }
+  .wrap{max-width:1180px;margin:0 auto;}
+  header{
+    display:flex;align-items:center;justify-content:space-between;
+    border-bottom:3px solid var(--ink);padding-bottom:16px;margin-bottom:28px;
+    flex-wrap:wrap;gap:12px;
+  }
+  .brand{display:flex;align-items:center;gap:14px;}
+  .brand-mark{
+    width:52px;height:52px;border-radius:50%;border:2.5px solid var(--ink);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Special Elite',monospace;font-size:22px;background:var(--paper);flex-shrink:0;
+  }
+  .brand h1{font-size:28px;margin:0;font-weight:800;}
+  .brand p{margin:2px 0 0;font-size:13px;color:var(--ink-soft);}
+  .counter{font-family:'Courier Prime',monospace;font-size:13px;color:var(--ink-soft);text-align:right;}
+  .counter b{color:var(--ink);font-size:15px;}
+  .grid{display:grid;grid-template-columns:400px 1fr;gap:24px;align-items:start;}
+  @media (max-width:900px){ .grid{grid-template-columns:1fr;} }
+  .panel{background:var(--paper);border:2px solid var(--ink);position:relative;}
+  .panel-title{
+    font-family:'Special Elite',monospace;font-size:13px;letter-spacing:2px;text-transform:uppercase;
+    background:var(--ink);color:var(--paper);padding:8px 14px;
+  }
+  .panel-body{padding:18px;}
+  label{
+    display:block;font-size:12.5px;font-weight:600;color:var(--ink-soft);
+    text-transform:uppercase;letter-spacing:0.8px;margin:16px 0 6px;
+  }
+  label:first-child{margin-top:0;}
+  input[type=text], textarea{
+    width:100%;border:1.5px solid var(--line);background:#fff;padding:10px 11px;
+    font-family:'Be Vietnam Pro',sans-serif;font-size:14.5px;color:var(--ink);border-radius:2px;
+  }
+  input[type=text]:focus, textarea:focus{outline:none;border-color:var(--ink);}
+  textarea{resize:vertical;min-height:56px;}
+  .chip-row{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{
+    border:1.5px solid var(--line);background:#fff;color:var(--ink-soft);
+    padding:7px 13px;font-size:13px;font-weight:600;border-radius:20px;cursor:pointer;user-select:none;
+  }
+  .chip:hover{border-color:var(--ink);}
+  .chip.active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+  .submit-btn{
+    width:100%;margin-top:22px;padding:14px;background:var(--stamp);color:#fff;border:none;border-radius:2px;
+    font-family:'Be Vietnam Pro',sans-serif;font-weight:700;font-size:15px;letter-spacing:0.5px;cursor:pointer;
+    box-shadow:3px 3px 0 var(--ink);
+  }
+  .submit-btn:disabled{background:var(--ink-soft);cursor:not-allowed;box-shadow:3px 3px 0 var(--line);}
+  .ticket-zone{min-height:420px;padding:24px;}
+  .ticket{
+    background:#fff;border:1.5px dashed var(--ink-soft);padding:26px 26px 20px;position:relative;
+    font-family:'Courier Prime',monospace;
+  }
+  .ticket-head{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-soft);border-bottom:1px dashed var(--line);padding-bottom:10px;margin-bottom:14px;flex-wrap:wrap;gap:6px;}
+  .ticket-num{font-weight:700;color:var(--ink);}
+  .ticket-body{white-space:pre-wrap;font-size:14.5px;line-height:1.65;color:var(--ink);min-height:80px;}
+  .ticket-meta{margin-top:16px;padding-top:12px;border-top:1px dashed var(--line);font-size:11.5px;color:var(--ink-soft);display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;}
+  .stamp{
+    position:absolute;top:16px;right:22px;width:78px;height:78px;border-radius:50%;
+    border:3px solid var(--stamp);color:var(--stamp);display:flex;align-items:center;justify-content:center;
+    text-align:center;font-family:'Special Elite',monospace;font-size:11px;letter-spacing:1px;
+    transform:rotate(-14deg);opacity:0.85;white-space:pre-line;
+  }
+  .actions{display:flex;gap:10px;margin-top:16px;}
+  .action-btn{
+    border:1.5px solid var(--ink);background:#fff;color:var(--ink);padding:8px 14px;font-size:13px;
+    font-weight:600;border-radius:2px;cursor:pointer;
+  }
+  .action-btn:hover{background:var(--ink);color:var(--paper);}
+  .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:340px;color:var(--ink-soft);text-align:center;gap:10px;}
+  .empty-state .big{font-family:'Special Elite',monospace;font-size:15px;}
+  .loading{display:flex;align-items:center;gap:10px;color:var(--ink-soft);font-family:'Courier Prime',monospace;font-size:14px;padding:20px 0;}
+  .dot{width:7px;height:7px;background:var(--stamp);border-radius:50%;animation:pulse 1s infinite ease-in-out;}
+  .dot:nth-child(2){animation-delay:.15s;} .dot:nth-child(3){animation-delay:.3s;}
+  @keyframes pulse{0%,80%,100%{opacity:.25;}40%{opacity:1;}}
+  .error-ticket{border-color:var(--stamp);}
+  .error-ticket .stamp{border-color:var(--stamp);color:var(--stamp);}
+  .history{margin-top:20px;}
+  .history-title{font-size:12px;text-transform:uppercase;letter-spacing:1.5px;color:var(--ink-soft);font-weight:700;margin-bottom:10px;}
+  .history-item{
+    display:flex;justify-content:space-between;gap:10px;padding:9px 12px;border:1px solid var(--line);
+    background:#fff;margin-bottom:6px;cursor:pointer;font-size:13px;border-radius:2px;
+  }
+  .history-item:hover{border-color:var(--ink);}
+  .history-item .h-topic{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .history-item .h-meta{color:var(--ink-soft);font-size:11.5px;white-space:nowrap;}
+</style>
+
+<style>
+.app-switcher{position:fixed;top:12px;right:12px;z-index:9999;display:flex;gap:8px}
+.app-switcher a{background:#111827;color:white;text-decoration:none;padding:9px 12px;border-radius:999px;font:600 13px/1 Arial,sans-serif;box-shadow:0 4px 16px rgba(0,0,0,.18)}
+.app-switcher a.alt{background:#2563eb}
+@media(max-width:600px){.app-switcher{top:8px;right:8px}.app-switcher a{padding:8px 10px;font-size:12px}}
+</style>
+</head>
+<body><div class="app-switcher"><a href="/">Trang chủ</a><a class="alt" href="/chat">Chat tìm kiếm</a></div>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="brand-mark">緣</div>
+      <div>
+        <h1>Xưởng Content</h1>
+        <p>Đặt phiếu — nhận nội dung, ngay tại đây</p>
+      </div>
+    </div>
+    <div class="counter">Đã đóng dấu<br><b id="totalCount">0</b> phiếu</div>
+  </header>
+
+  <div class="grid">
+    <div class="panel">
+      <div class="panel-title">Phiếu đặt nội dung</div>
+      <div class="panel-body">
+        <label>Chủ đề</label>
+        <input type="text" id="topic" placeholder="VD: khai trương quán cafe, xăm hình mini...">
+
+        <label>Nền tảng</label>
+        <div class="chip-row" id="platformChips"></div>
+
+        <label>Loại nội dung</label>
+        <div class="chip-row" id="typeChips"></div>
+
+        <label>Giọng điệu</label>
+        <div class="chip-row" id="toneChips"></div>
+
+        <label>Độ dài</label>
+        <div class="chip-row" id="lengthChips"></div>
+
+        <label>Bối cảnh thêm (tuỳ chọn)</label>
+        <textarea id="context" placeholder="Tên thương hiệu, ưu đãi, địa chỉ..."></textarea>
+
+        <button class="submit-btn" id="genBtn" onclick="generateContent()">TẠO NỘI DUNG →</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Kết quả</div>
+      <div class="ticket-zone" id="ticketZone">
+        <div class="empty-state">
+          <div class="big">— CHƯA CÓ PHIẾU NÀO —</div>
+          <div>Điền thông tin bên trái rồi bấm "Tạo nội dung"</div>
+        </div>
+      </div>
+      <div class="history" id="historyWrap" style="display:none;padding:0 24px 24px;">
+        <div class="history-title">Phiếu trước đó</div>
+        <div id="historyList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const PLATFORMS = {
+  facebook:{label:"Facebook"}, instagram:{label:"Instagram"}, tiktok:{label:"TikTok"},
+  blog:{label:"Blog"}, email:{label:"Email"}, linkedin:{label:"LinkedIn"}
+};
+const TYPES = { caption:"caption", article:"bài viết", script:"kịch bản video", email_body:"nội dung email" };
+const TONES = { friendly:"Thân thiện", professional:"Chuyên nghiệp", playful:"Vui tươi", luxury:"Sang trọng", urgent:"Khẩn cấp" };
+const LENGTHS = { short:"Ngắn", medium:"Vừa", long:"Dài" };
+
+let state = { platform:"facebook", type:"caption", tone:"friendly", length:"medium" };
+let history = [];
+let ticketCounter = 0;
+
+function buildChips(containerId, options, stateKey, labelFn){
+  const el = document.getElementById(containerId);
+  el.innerHTML = "";
+  Object.keys(options).forEach(key=>{
+    const chip = document.createElement("div");
+    chip.className = "chip" + (state[stateKey]===key ? " active":"");
+    chip.textContent = labelFn(key, options[key]);
+    chip.onclick = ()=>{ state[stateKey] = key; buildChips(containerId, options, stateKey, labelFn); };
+    el.appendChild(chip);
+  });
+}
+function renderChips(){
+  buildChips("platformChips", PLATFORMS, "platform", (k,v)=>v.label);
+  buildChips("typeChips", TYPES, "type", (k,v)=>v.charAt(0).toUpperCase()+v.slice(1));
+  buildChips("toneChips", TONES, "tone", (k,v)=>v);
+  buildChips("lengthChips", LENGTHS, "length", (k,v)=>v);
+}
+renderChips();
+
+function stampLabel(){
+  const map = {facebook:"FB", instagram:"IG", tiktok:"TT", blog:"BLOG", email:"MAIL", linkedin:"LI"};
+  return map[state.platform] + "\nĐÃ TẠO";
+}
+
+async function generateContent(){
+  const topic = document.getElementById("topic").value.trim();
+  const ctx = document.getElementById("context").value.trim();
+  const zone = document.getElementById("ticketZone");
+  const btn = document.getElementById("genBtn");
+
+  if(!topic){
+    zone.innerHTML = `<div class="empty-state"><div class="big" style="color:var(--stamp);">— THIẾU CHỦ ĐỀ —</div><div>Nhập chủ đề trước khi tạo nội dung nhé.</div></div>`;
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = "ĐANG TẠO...";
+  zone.innerHTML = `<div class="loading"><div class="dot"></div><div class="dot"></div><div class="dot"></div>&nbsp; Đang soạn nội dung...</div>`;
+
+  try{
+    const res = await fetch("/api/generate", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({
+        topic, context: ctx,
+        platform: state.platform, type: state.type, tone: state.tone, length: state.length
+      })
+    });
+    const data = await res.json();
+    if(!res.ok || data.error){
+      throw new Error(data.error || ("Lỗi HTTP " + res.status));
+    }
+
+    ticketCounter++;
+    document.getElementById("totalCount").textContent = ticketCounter;
+    const record = {
+      num: ticketCounter, topic, result: data.result,
+      platform: state.platform, type: state.type,
+      time: new Date().toLocaleString("vi-VN")
+    };
+    history.unshift(record);
+    renderTicket(record);
+    renderHistory();
+  }catch(err){
+    zone.innerHTML = `
+      <div class="ticket error-ticket">
+        <div class="stamp">TỪ CHỐI</div>
+        <div class="ticket-head"><span class="ticket-num">LỖI</span><span>${new Date().toLocaleString("vi-VN")}</span></div>
+        <div class="ticket-body">Không tạo được nội dung.\n\nChi tiết: ${escapeHtml(err.message || String(err))}</div>
+      </div>`;
+  }finally{
+    btn.disabled = false;
+    btn.textContent = "TẠO NỘI DUNG →";
+  }
+}
+
+function renderTicket(r){
+  const zone = document.getElementById("ticketZone");
+  zone.innerHTML = `
+    <div class="ticket">
+      <div class="stamp">${stampLabel()}</div>
+      <div class="ticket-head">
+        <span class="ticket-num">PHIẾU #${String(r.num).padStart(4,"0")}</span>
+        <span>${r.time}</span>
+      </div>
+      <div class="ticket-body">${escapeHtml(r.result)}</div>
+      <div class="ticket-meta">
+        <span>Chủ đề: ${escapeHtml(r.topic)}</span>
+        <span>${PLATFORMS[r.platform].label} · ${TYPES[r.type]}</span>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="action-btn" onclick="copyResult(${r.num})">Sao chép</button>
+    </div>
+  `;
+}
+
+function renderHistory(){
+  const wrap = document.getElementById("historyWrap");
+  const list = document.getElementById("historyList");
+  wrap.style.display = history.length ? "block" : "none";
+  list.innerHTML = "";
+  history.forEach(r=>{
+    const item = document.createElement("div");
+    item.className = "history-item";
+    item.innerHTML = `<span class="h-topic">#${String(r.num).padStart(4,"0")} — ${escapeHtml(r.topic)}</span><span class="h-meta">${PLATFORMS[r.platform].label}</span>`;
+    item.onclick = ()=>renderTicket(r);
+    list.appendChild(item);
+  });
+}
+
+function copyResult(num){
+  const r = history.find(h=>h.num===num);
+  if(!r) return;
+  navigator.clipboard.writeText(r.result).then(()=>{
+    const btn = event.target;
+    const old = btn.textContent;
+    btn.textContent = "Đã sao chép!";
+    setTimeout(()=>btn.textContent = old, 1400);
+  });
+}
+
+function escapeHtml(str){
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
+</script>
+</body>
+</html>
